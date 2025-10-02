@@ -59,6 +59,10 @@ export class ProductService {
     await this.productRepository.clear();
   }
 
+  async softDeleteById(id: number): Promise<void> {
+    await this.productRepository.update(id, { isActive: false });
+  }
+
   async upsertFromContentful(product: ProductEntity): Promise<ProductEntity> {
     const existing = await this.productRepository.findOneBy({
       contentfulId: product.contentfulId,

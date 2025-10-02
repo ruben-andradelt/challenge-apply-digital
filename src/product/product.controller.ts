@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Query } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiBadRequestResponse } from '@nestjs/swagger';
 import { ProductService } from './product.service';
 import { ProductEntity } from './product.entity';
@@ -25,8 +25,13 @@ export class ProductController {
     return this.productService.find(query);
   }
 
-  @Delete()
+  @Delete('all')
   async deleteAll(): Promise<void> {
     return this.productService.removeAll();
+  }
+
+  @Delete(':id')
+  async softDeleteById(@Param('id') id: string): Promise<void> {
+    return this.productService.softDeleteById(Number(id));
   }
 }
