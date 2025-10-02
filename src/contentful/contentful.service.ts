@@ -14,12 +14,20 @@ export class ContentfulService {
     });
   }
 
-  async fetchProducts() {
+  async fetchProducts(page: number = 1, limit: number = 25) {
+    const skip = (page - 1) * limit;
+
     const entries = await this.client.getEntries({
       content_type: this.configService.get('CONTENTFUL_CONTENT_TYPE')!,
-      limit: 3,
+      limit,
+      skip,
     });
 
-    return entries.items;
+    return {
+      items: entries.items,
+      total: entries.total,
+      pages: Math.ceil(entries.total / limit),
+      currentPage: page,
+    };
   }
 }
