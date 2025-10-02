@@ -15,8 +15,6 @@ export class ProductService {
   async find(query: FindProductsRequestDto): Promise<FindProductsResponseDto> {
     const qb = this.productRepository.createQueryBuilder('product');
 
-    qb.andWhere('product.isActive = :isActive', { isActive: true });
-
     if (query.name) {
       qb.andWhere('product.name ILIKE :name', { name: `%${query.name}%` });
     }
@@ -60,7 +58,7 @@ export class ProductService {
   }
 
   async softDeleteById(id: number): Promise<void> {
-    await this.productRepository.update(id, { isActive: false });
+    await this.productRepository.softRemove({ id });
   }
 
   async upsertFromContentful(product: ProductEntity): Promise<ProductEntity> {
