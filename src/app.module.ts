@@ -7,6 +7,7 @@ import { validate } from './env.validation';
 import { SchedulerService } from './scheduler/scheduler.service';
 import { ProductEntity } from './product/product.entity';
 import { ProductModule } from './product/product.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ProductModule } from './product/product.module';
       synchronize: true,
     }),
     ProductModule,
+    ReportModule,
   ],
   controllers: [],
   providers: [ContentfulService, SchedulerService],

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { IsNull, LessThan, Not, Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
 import { FindProductsRequestDto } from './dto/find-products.request.dto';
 import { FindProductsResponseDto } from './dto/find-products.response.dto';
@@ -59,6 +59,47 @@ export class ProductService {
 
   async softDeleteById(id: number): Promise<void> {
     await this.productRepository.softRemove({ id });
+  }
+
+  async count(query: any = {}): Promise<number> {
+    const qb = this.productRepository.createQueryBuilder('product');
+
+    if (query.withDeleted) {
+      qb.withDeleted();
+    }
+
+    if (query.start) {
+      qb.andWhere('product.createdAt >= :start', { start: query.start });
+    }
+
+    if (query.end) {
+      qb.andWhere('product.createdAt <= :end', { end: query.end });
+    }
+
+    if (query.minPrice) {
+      qb.andWhere('product.price >= :minPrice', { minPrice: query.minPrice });
+    }
+
+    if (query.maxPrice) {
+      qb.andWhere('product.price <= :maxPrice', { maxPrice: query.maxPrice });
+    }
+
+    const total = await qb.getCount();
+
+    return total;
+  }
+
+  async countDeleted(): Promise<number> {
+    return this.productRepository.count({
+      withDeleted: true,
+      where: { deletedAt: Not(IsNull()) },
+    });
+  }
+
+  async getAlmostOutOfStock(): Promise<ProductEntity[]> {
+    return this.productRepository.find({
+      where: [{ stock: LessThan(10) }, { stock: IsNull() }],
+    });
   }
 
   async upsertFromContentful(product: ProductEntity): Promise<ProductEntity> {

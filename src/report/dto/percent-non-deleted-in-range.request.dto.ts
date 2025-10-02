@@ -1,19 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { PaginationRequestDto } from './pagination.request.dto';
-import { IsInt, IsOptional, IsString, Min, Validate } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  Min,
+  Validate,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { PriceRangeValidator } from '../../common/validators/price-range.validator';
 
-export class FindProductsRequestDto extends PaginationRequestDto {
-  @ApiProperty({ description: 'Product name' })
-  @IsOptional()
-  @IsString()
-  name?: string;
+export class PercentNonDeletedInRangeRequestDto {
+  @ApiProperty({ description: 'Start date' })
+  @IsNotEmpty()
+  @IsDateString()
+  start: string;
 
-  @ApiProperty({ description: 'Product category' })
-  @IsOptional()
-  @IsString()
-  category?: string;
+  @ApiProperty({ description: 'End date' })
+  @IsNotEmpty()
+  @IsDateString()
+  end: string;
 
   @ApiProperty({ description: 'Product min price' })
   @IsOptional()
