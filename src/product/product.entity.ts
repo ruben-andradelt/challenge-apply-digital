@@ -43,4 +43,10 @@ export class ProductEntity {
     default: 0,
   })
   stock: number;
+
+  @Column({
+    type: 'boolean',
+    default: 1,
+  })
+  isActive: boolean;
 }

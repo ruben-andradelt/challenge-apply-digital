@@ -3,6 +3,10 @@ import { IsInt, IsNotEmpty, IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
   @IsNotEmpty()
+  @IsInt()
+  PORT: number;
+
+  @IsNotEmpty()
   @IsString()
   CONTENTFUL_SPACE_ID: string;
 
@@ -17,10 +21,6 @@ class EnvironmentVariables {
   @IsNotEmpty()
   @IsString()
   CONTENTFUL_CONTENT_TYPE: string;
-
-  @IsNotEmpty()
-  @IsInt()
-  PORT: number;
 }
 
 export function validate(

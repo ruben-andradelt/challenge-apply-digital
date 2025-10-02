@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
+import { FindProductsRequestDto } from './dto/find-products.request.dto';
+import { FindProductsResponseDto } from './dto/find-products.response.dto';
 
 @Injectable()
 export class ProductService {
@@ -10,8 +12,51 @@ export class ProductService {
     private productRepository: Repository<ProductEntity>,
   ) {}
 
+  async find(query: FindProductsRequestDto): Promise<FindProductsResponseDto> {
+    const qb = this.productRepository.createQueryBuilder('product');
+
+    qb.andWhere('product.isActive = :isActive', { isActive: true });
+
+    if (query.name) {
+      qb.andWhere('product.name ILIKE :name', { name: `%${query.name}%` });
+    }
+
+    if (query.category) {
+      qb.andWhere('product.category ILIKE :category', {
+        category: `%${query.category}%`,
+      });
+    }
+
+    if (query.minPrice) {
+      qb.andWhere('product.price >= :minPrice', { minPrice: query.minPrice });
+    }
+
+    if (query.maxPrice) {
+      qb.andWhere('product.price <= :maxPrice', { maxPrice: query.maxPrice });
+    }
+
+    const [items, total] = await qb
+      .skip((query.page - 1) * query.rowCount)
+      .take(query.rowCount)
+      .getManyAndCount();
+
+    return {
+      totalItems: total,
+      totalPages: Math.ceil(total / query.rowCount),
+      page: query.page,
+      count: items.length,
+      items: items,
+    };
+  }
+
+  // for testing purposes
   async findAll(): Promise<ProductEntity[]> {
     return this.productRepository.find();
+  }
+
+  // for testing purposes
+  async removeAll(): Promise<void> {
+    await this.productRepository.clear();
   }
 
   async upsertFromContentful(product: ProductEntity): Promise<ProductEntity> {
