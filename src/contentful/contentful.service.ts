@@ -17,7 +17,7 @@ export class ContentfulService {
   async fetchProducts() {
     const entries = await this.client.getEntries({
       content_type: this.configService.get('CONTENTFUL_CONTENT_TYPE')!,
-      limit: 100,
+      limit: 3,
     });
 
     return entries.items;
