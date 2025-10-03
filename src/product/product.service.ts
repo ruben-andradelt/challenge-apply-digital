@@ -123,8 +123,9 @@ export class ProductService {
   async upsertFromContentful(product: ProductEntity): Promise<ProductEntity> {
     this.logger.log(`upsertFromContentful: ${product.contentfulId}`);
 
-    const existing = await this.productRepository.findOneBy({
-      contentfulId: product.contentfulId,
+    const existing = await this.productRepository.findOne({
+      where: { contentfulId: product.contentfulId },
+      withDeleted: true,
     });
 
     if (existing) {
