@@ -67,13 +67,15 @@ npm run start:dev
 
 Create a .env file with:
 ```
-DATABASE_URL=postgres://user:pass@localhost:5432/db
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/db
 CONTENTFUL_SPACE_ID=your_space_id
 CONTENTFUL_ACCESS_TOKEN=your_access_token
 CONTENTFUL_ENVIRONMENT=master
 CONTENTFUL_CONTENT_TYPE=product
 JWT_SECRET=your_jwt_secret
 ```
+
+>⚠️ Important: When using Docker Compose, localhost will not work inside the app container. Always use the Postgres service name (postgres in this example) as the host.
 
 ---
 
@@ -90,7 +92,11 @@ This will:
 
 - Start the PostgreSQL database
 - Start the NestJS API
-- Connect the app to the database automatically
+
+>Note: Docker Compose will not build the application. You need to build the Docker image manually first if you haven’t already:
+```bash
+docker build -f .Dockerfile -t apply-digital-api .
+```
 
 ---
 
