@@ -21,14 +21,14 @@ export class PercentNonDeletedInRangeRequestDto {
   @IsDateString()
   end: string;
 
-  @ApiProperty({ description: 'Product min price' })
+  @ApiProperty({ description: 'Product min price', required: false })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
   minPrice?: number;
 
-  @ApiProperty({ description: 'Product max price' })
+  @ApiProperty({ description: 'Product max price', required: false })
   @IsOptional()
   @Type(() => Number)
   @IsInt()

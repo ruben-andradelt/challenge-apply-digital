@@ -13,6 +13,8 @@ export class ProductService {
   ) {}
 
   async find(query: FindProductsRequestDto): Promise<FindProductsResponseDto> {
+    const { page = 1, rowCount = 5 } = query;
+
     const qb = this.productRepository.createQueryBuilder('product');
 
     if (query.name) {
@@ -34,14 +36,14 @@ export class ProductService {
     }
 
     const [items, total] = await qb
-      .skip((query.page - 1) * query.rowCount)
+      .skip((page - 1) * rowCount)
       .take(query.rowCount)
       .getManyAndCount();
 
     return {
       totalItems: total,
-      totalPages: Math.ceil(total / query.rowCount),
-      page: query.page,
+      totalPages: Math.ceil(total / rowCount),
+      page: page,
       count: items.length,
       items: items,
     };
