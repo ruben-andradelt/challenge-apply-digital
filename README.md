@@ -1,98 +1,142 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🛍 Product Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+[![Coverage](https://img.shields.io/badge/coverage-30%25%2B-brightgreen?style=flat-square)](https://github.com/<USERNAME>/<REPO>/actions)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+A scalable **NestJS** backend for managing products, integrating **Contentful CMS**, and providing reporting features like stock alerts and deletion statistics. Perfect for SaaS platforms, e-commerce backends, or internal tools.  
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🚀 Features
 
-## Project setup
+- **Products Management**  
+  CRUD operations with soft deletes and upsert support from Contentful.  
 
-```bash
-$ pnpm install
-```
+- **Contentful Integration**  
+  Pull products automatically via scheduler from your Contentful CMS.  
 
-## Compile and run the project
+- **Reports & Metrics**  
+  - Percent of deleted products  
+  - Percent of non-deleted products in a price range  
+  - Almost out-of-stock products  
 
-```bash
-# development
-$ pnpm run start
+- **Validation & Security**  
+  - DTO validation with `class-validator`  
+  - JWT authentication for private endpoints  
+  - Swagger API documentation  
 
-# watch mode
-$ pnpm run start:dev
+- **Testing**  
+  - Unit tests with Jest covering services, controllers, and DTO validation  
+  - Mocked database and Contentful for fast tests  
 
-# production mode
-$ pnpm run start:prod
-```
+- **Scalable Architecture**  
+  - TypeORM for database access  
+  - Cron jobs via `@nestjs/schedule`  
+  - Logger integrated for observability  
 
-## Run tests
+---
 
-```bash
-# unit tests
-$ pnpm run test
+## 🛠 Tech Stack
 
-# e2e tests
-$ pnpm run test:e2e
+- **Framework:** NestJS  
+- **Database:** PostgreSQL (via TypeORM)  
+- **CMS:** Contentful  
+- **Auth:** JWT  
+- **Testing:** Jest & ts-jest  
+- **Documentation:** Swagger  
+- **Scheduler:** NestJS Cron  
 
-# test coverage
-$ pnpm run test:cov
-```
+---
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 📦 Installation
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+# Clone the repo
+git clone <repo-url>
+cd <repo-name>
+
+# Install dependencies
+npm install
+
+# Run the development server
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## ⚡ Environment Variables
 
-Check out a few resources that may come in handy when working with NestJS:
+Create a .env file with:
+```
+DATABASE_URL=postgres://user:pass@localhost:5432/db
+CONTENTFUL_SPACE_ID=your_space_id
+CONTENTFUL_ACCESS_TOKEN=your_access_token
+CONTENTFUL_ENVIRONMENT=master
+CONTENTFUL_CONTENT_TYPE=product
+JWT_SECRET=your_jwt_secret
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+---
 
-## Support
+## 📦 Docker Compose
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+You can run the entire application locally using Docker Compose:
 
-## Stay in touch
+```bash
+# Build and start all services
+docker-compose up --build
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+This will:
 
-## License
+- Start the PostgreSQL database
+- Start the NestJS API
+- Connect the app to the database automatically
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+---
+
+## 📄 API Documentation
+
+Start the server and visit:
+
+```
+http://localhost:3000/api
+```
+- /auth/jwt → Get a JWT token
+- /products → CRUD products
+- /reports/percent-deleted → Percent of deleted products
+- /reports/percent-non-deleted-with-price → Filtered report
+- /reports/almost-out-of-stock → Products low on stock
+
+---
+
+## 🧪 Testing
+
+Run all tests with coverage:
+
+```
+npm run test
+npm run test:cov
+```
+Coverage thresholds are enforced at 30% minimum.
+
+---
+
+## 🕹 Scheduler
+
+The scheduler automatically fetches products from Contentful **every hour**:
+
+```ts
+@Cron(CronExpression.EVERY_HOUR)
+async fetchContentfulProducts()
+```
+
+You can also run it manually:
+```ts
+await schedulerService.fetchContentfulProducts();
+```
+
+---
+
+## 📈 License
+
+MIT License © 2025
