@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, LessThan, Not, Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
@@ -7,12 +7,16 @@ import { FindProductsResponseDto } from './dto/find-products.response.dto';
 
 @Injectable()
 export class ProductService {
+  private logger = new Logger(this.constructor.name);
+
   constructor(
     @InjectRepository(ProductEntity)
     private productRepository: Repository<ProductEntity>,
   ) {}
 
   async find(query: FindProductsRequestDto): Promise<FindProductsResponseDto> {
+    this.logger.log(`find: ${JSON.stringify(query)}`);
+
     const { page = 1, rowCount = 5 } = query;
 
     const qb = this.productRepository.createQueryBuilder('product');
@@ -51,19 +55,27 @@ export class ProductService {
 
   // for testing purposes
   async findAll(): Promise<ProductEntity[]> {
+    this.logger.log('findAll');
+
     return this.productRepository.find();
   }
 
   // for testing purposes
   async removeAll(): Promise<void> {
+    this.logger.log('removeAll');
+
     await this.productRepository.clear();
   }
 
   async softDeleteById(id: number): Promise<void> {
+    this.logger.log(`softDeleteById: ${id}`);
+
     await this.productRepository.softRemove({ id });
   }
 
   async count(query: any = {}): Promise<number> {
+    this.logger.log(`count: ${JSON.stringify(query)}`);
+
     const qb = this.productRepository.createQueryBuilder('product');
 
     if (query.withDeleted) {
@@ -92,6 +104,8 @@ export class ProductService {
   }
 
   async countDeleted(): Promise<number> {
+    this.logger.log('countDeleted');
+
     return this.productRepository.count({
       withDeleted: true,
       where: { deletedAt: Not(IsNull()) },
@@ -99,12 +113,16 @@ export class ProductService {
   }
 
   async getAlmostOutOfStock(): Promise<ProductEntity[]> {
+    this.logger.log('getAlmostOutOfStock');
+
     return this.productRepository.find({
       where: [{ stock: LessThan(10) }, { stock: IsNull() }],
     });
   }
 
   async upsertFromContentful(product: ProductEntity): Promise<ProductEntity> {
+    this.logger.log(`upsertFromContentful: ${product.contentfulId}`);
+
     const existing = await this.productRepository.findOneBy({
       contentfulId: product.contentfulId,
     });

@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ProductService } from '../product/product.service';
 import { roundToTwoDecimals } from '../utils/number';
 
 @Injectable()
 export class ReportService {
+  private logger = new Logger(this.constructor.name);
+
   constructor(private productService: ProductService) {}
 
   async percentDeleted(): Promise<any> {
+    this.logger.log('percentDeleted');
+
     const total = await this.productService.count({ withDeleted: true });
     const deleted = await this.productService.countDeleted();
     const percent = total === 0 ? 0 : (deleted / total) * 100;
@@ -15,6 +19,8 @@ export class ReportService {
   }
 
   async percentNonDeletedWithPrice(query: any): Promise<any> {
+    this.logger.log(`percentNonDeletedWithPrice: ${JSON.stringify(query)}`);
+
     const start = new Date(query.start);
     const end = new Date(query.end);
     const minPrice = query.minPrice;
@@ -39,6 +45,8 @@ export class ReportService {
   }
 
   async almostOutOfStock(): Promise<string[]> {
+    this.logger.log('almostOutOfStock');
+
     const almostOutOfStock = await this.productService.getAlmostOutOfStock();
 
     return almostOutOfStock.map(

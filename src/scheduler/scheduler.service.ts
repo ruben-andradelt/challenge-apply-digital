@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ContentfulService } from '../contentful/contentful.service';
 import { ProductService } from '../product/product.service';
@@ -6,6 +6,8 @@ import { ContentfulProductMapper } from '../product/mappers/contetnful-product.m
 
 @Injectable()
 export class SchedulerService {
+  private logger = new Logger(this.constructor.name);
+
   constructor(
     private readonly contentfulService: ContentfulService,
     private readonly productService: ProductService,
@@ -14,10 +16,11 @@ export class SchedulerService {
   @Cron(CronExpression.EVERY_HOUR)
   async fetchContentfulProducts() {
     try {
-      console.log('fetching');
+      this.logger.log('fetchContentfulProducts');
 
       let page = 1;
       while (true) {
+        this.logger.log(`fetching page ${page}`);
         const { currentPage, pages } =
           await this.pullContentfulProductsByPage(page);
 
@@ -26,7 +29,7 @@ export class SchedulerService {
         if (currentPage >= pages) break;
       }
     } catch (err) {
-      console.log(err);
+      this.logger.error(err);
     }
   }
 
