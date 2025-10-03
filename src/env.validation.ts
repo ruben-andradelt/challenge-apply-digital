@@ -21,6 +21,10 @@ class EnvironmentVariables {
   @IsNotEmpty()
   @IsString()
   CONTENTFUL_CONTENT_TYPE: string;
+
+  @IsNotEmpty()
+  @IsString()
+  JWT_SECRET: string;
 }
 
 export function validate(

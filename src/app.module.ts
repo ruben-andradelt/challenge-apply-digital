@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ContentfulService } from './contentful/contentful.service';
@@ -8,10 +8,13 @@ import { SchedulerService } from './scheduler/scheduler.service';
 import { ProductEntity } from './product/product.entity';
 import { ProductModule } from './product/product.module';
 import { ReportModule } from './report/report.module';
+import { UserController } from './user/user.controller';
+import { UserModule } from './user/user.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, validate }),
+    ConfigModule.forRoot({ isGlobal: true, validate, envFilePath: ['.env'] }),
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -20,10 +23,20 @@ import { ReportModule } from './report/report.module';
       entities: [ProductEntity],
       synchronize: true,
     }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' },
+      }),
+    }),
     ProductModule,
     ReportModule,
+    UserModule,
   ],
-  controllers: [],
+  controllers: [UserController],
   providers: [ContentfulService, SchedulerService],
 })
 export class AppModule {}
