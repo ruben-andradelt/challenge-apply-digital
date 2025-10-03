@@ -2,8 +2,9 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IsNull, LessThan, Not, Repository } from 'typeorm';
 import { ProductEntity } from './product.entity';
-import { FindProductsRequestDto } from './dto/find-products.request.dto';
-import { FindProductsResponseDto } from './dto/find-products.response.dto';
+import { Paginated } from '../common/types/paginated.type';
+import { CountProductsQuery } from './types/count-products.type';
+import { FindProductsQuery } from './types/find-products.type';
 
 @Injectable()
 export class ProductService {
@@ -14,7 +15,7 @@ export class ProductService {
     private productRepository: Repository<ProductEntity>,
   ) {}
 
-  async find(query: FindProductsRequestDto): Promise<FindProductsResponseDto> {
+  async find(query: FindProductsQuery): Promise<Paginated<ProductEntity>> {
     this.logger.log(`find: ${JSON.stringify(query)}`);
 
     const { page = 1, rowCount = 5 } = query;
@@ -73,7 +74,7 @@ export class ProductService {
     await this.productRepository.softRemove({ id });
   }
 
-  async count(query: any = {}): Promise<number> {
+  async count(query: CountProductsQuery = {}): Promise<number> {
     this.logger.log(`count: ${JSON.stringify(query)}`);
 
     const qb = this.productRepository.createQueryBuilder('product');

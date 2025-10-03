@@ -14,7 +14,7 @@ export class SchedulerService {
   ) {}
 
   @Cron(CronExpression.EVERY_HOUR)
-  async fetchContentfulProducts() {
+  async fetchContentfulProducts(): Promise<void> {
     try {
       this.logger.log('fetchContentfulProducts');
 
@@ -33,7 +33,9 @@ export class SchedulerService {
     }
   }
 
-  private async pullContentfulProductsByPage(page: number = 1) {
+  private async pullContentfulProductsByPage(
+    page: number = 1,
+  ): Promise<Record<'pages' | 'currentPage', number>> {
     const { items, pages, currentPage } =
       await this.contentfulService.fetchProducts(page);
 

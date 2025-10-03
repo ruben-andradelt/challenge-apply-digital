@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ProductService } from '../product/product.service';
 import { roundToTwoDecimals } from '../utils/number';
+import { PercentDeletedResponse } from './types/percent-deleted.type';
+import {
+  PercentNonDeletedInRangeQuery,
+  PercentNonDeletedInRangeResponse,
+} from './types/percent-non-deleted-in-nrage.type';
 
 @Injectable()
 export class ReportService {
@@ -8,7 +13,7 @@ export class ReportService {
 
   constructor(private productService: ProductService) {}
 
-  async percentDeleted(): Promise<any> {
+  async percentDeleted(): Promise<PercentDeletedResponse> {
     this.logger.log('percentDeleted');
 
     const total = await this.productService.count({ withDeleted: true });
@@ -18,7 +23,9 @@ export class ReportService {
     return { total, deleted, percent: roundToTwoDecimals(percent) };
   }
 
-  async percentNonDeletedWithPrice(query: any): Promise<any> {
+  async percentNonDeletedWithPrice(
+    query: PercentNonDeletedInRangeQuery,
+  ): Promise<PercentNonDeletedInRangeResponse> {
     this.logger.log(`percentNonDeletedWithPrice: ${JSON.stringify(query)}`);
 
     const start = new Date(query.start);
