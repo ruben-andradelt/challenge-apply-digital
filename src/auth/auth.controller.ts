@@ -1,11 +1,11 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiTags, ApiOperation } from '@nestjs/swagger';
-import { UserService } from './user.service';
+import { AuthService } from './auth.service';
 
 @ApiTags('Private')
-@Controller('users')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   @Get('jwt')
   @ApiOperation({
@@ -14,6 +14,6 @@ export class UserController {
   })
   @ApiOkResponse({ type: String })
   async generateJWT(): Promise<string> {
-    return this.userService.generateJWT();
+    return this.authService.generateJWT();
   }
 }

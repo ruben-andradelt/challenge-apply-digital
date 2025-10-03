@@ -8,8 +8,7 @@ import { SchedulerService } from './scheduler/scheduler.service';
 import { ProductEntity } from './product/product.entity';
 import { ProductModule } from './product/product.module';
 import { ReportModule } from './report/report.module';
-import { UserController } from './user/user.controller';
-import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
@@ -34,9 +33,9 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     ProductModule,
     ReportModule,
-    UserModule,
+    AuthModule,
   ],
-  controllers: [UserController],
+  controllers: [],
   providers: [ContentfulService, SchedulerService],
 })
 export class AppModule {}
